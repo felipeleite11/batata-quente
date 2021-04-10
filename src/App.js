@@ -7,7 +7,7 @@ import 'animate.css/animate.min.css'
 
 import { Container } from './styles'
 
-const initialTime = 1
+const initialTime = 50
 const animationTime = 300
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   const [index, setIndex] = useState(0)
   const [subject, setSubject] = useState(database[0])
   const [overWords, setOverWords] = useState(false)
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
     if(time > 0) {
@@ -44,10 +45,18 @@ function App() {
     setIndex(index + 1)
   }
 
+  if(!started) {
+    return (
+      <Container>
+        <h1 className="over animate__animated animate__flash animate__faster" onClick={() => { setStarted(true) }} style={{ cursor: 'pointer' }}>COMEÇAR</h1>
+      </Container>
+    )
+  }
+
   return (
     <Container>
       {overWords ? (
-        <h1 className="over animate__animated animate__flash animate__faster">ACABARAM AS PALAVRAS!</h1>
+          <h1 className="over animate__animated animate__flash animate__faster">ACABARAM AS PALAVRAS!</h1>
       ) : (
         <>
           <p>O TEMA É</p>
@@ -59,9 +68,8 @@ function App() {
           </h1>
 
           <ProgressBar 
-            completed={time * 100 / initialTime}
-            bgColor="#4caf50"
-            baseBgColor={out ? 'red' : '#e0e0de'}
+            completed={100 - time * 100 / initialTime}
+            bgColor="red"
             height={8}
             isLabelVisible={false}
             className="progress"
@@ -71,8 +79,6 @@ function App() {
           {out && (
             <h1 className="timeout animate__animated animate__shakeX animate__faster">O TEMPO ACABOU!</h1>
           )}
-
-          
 
           <button onClick={next} className="button">Próximo tema</button>
         </>
